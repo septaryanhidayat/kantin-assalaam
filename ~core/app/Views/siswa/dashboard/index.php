@@ -50,53 +50,82 @@
                         </div>
                         <!-- end title -->
 
-                        <!-- profile balance -->
-                        <div class="border-radius-style background-circle background-primer">
-                            <div class="container">
-                                <div class="background-white border-radius padding-box-middle box-shadow">
-                                    <div class="row row-no-margin-bottom">
-                                        <div class="col-60">
-                                            <div class="float-left margin-right-small">
-                                                <?php if (!empty($user->foto)) : ?>
-                                                    <img class="people" src="<?= base_url('assets/client/foto/' . $user->foto) ?>">
-                                                <?php else : ?>
-                                                    <img class="people" src="<?= base_url() ?>/assets/client/images/author.jpg" alt="">
-                                                <?php endif ?>
+                        <!-- profile balance & monthly expense card -->
+                        <div class="border-radius-style background-primer" style="height: 48px; width: 100%;"></div>
+
+                        <div class="container" style="margin-top: -38px; position: relative; z-index: 10;">
+                            <div class="background-white border-radius box-shadow" style="padding: 16px 16px 14px 16px;">
+                                
+                                <!-- Top: Avatar, Nama Siswa, NIS & Sisa Saldo -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px dashed #e8ecef;">
+                                    
+                                    <!-- Left: Avatar + Info Siswa -->
+                                    <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                                        <div style="flex-shrink: 0;">
+                                            <?php if (!empty($user->foto)) : ?>
+                                                <img src="<?= base_url('assets/client/foto/' . $user->foto) ?>" 
+                                                     style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); display: block;">
+                                            <?php else : ?>
+                                                <img src="<?= base_url('assets/client/images/author.jpg') ?>" 
+                                                     style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); display: block;">
+                                            <?php endif ?>
+                                        </div>
+
+                                        <div style="flex: 1; min-width: 0;">
+                                            <div style="font-size: 14px; font-weight: 700; color: #2d3436; line-height: 1.35; word-break: break-word; margin-bottom: 4px;">
+                                                <?= $user->nama ?>
                                             </div>
-                                            <div class="overflow-hidden">
-                                                <h5><?= $user->nama ?></h5>
-                                                <p><?= $user->kode ?></p>
+                                            <div>
+                                                <span style="font-size: 11px; color: #636e72; background: #f1f2f6; padding: 2px 7px; border-radius: 4px; font-weight: 600; display: inline-block;">
+                                                    <?= $user->kode ?>
+                                                </span>
                                             </div>
                                         </div>
-                                        <div class="col-40">
-                                            <button class="buttons float-right letter-spacing margin-top-small">Rp. <?= number_format($user->saldo, '0', '.', ',') ?></button>
+                                    </div>
+
+                                    <!-- Right: Sisa Saldo Pill -->
+                                    <div style="flex-shrink: 0; text-align: right; align-self: center; padding-left: 4px;">
+                                        <span style="display: block; font-size: 9px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Sisa Saldo</span>
+                                        <div style="background: linear-gradient(135deg, #ff793f, #EB6025); color: #fff; font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 20px; box-shadow: 0 3px 8px rgba(235,96,37,0.28); white-space: nowrap; display: inline-block;">
+                                            Rp. <?= number_format($user->saldo, '0', '.', ',') ?>
                                         </div>
                                     </div>
+
                                 </div>
+
+                                <!-- Bottom: Total Belanja Bulan Ini -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 11px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+                                        <div style="width: 36px; height: 36px; border-radius: 9px; background: rgba(235, 96, 37, 0.1); display: flex; align-items: center; justify-content: center; color: #EB6025; font-size: 15px; flex-shrink: 0;">
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </div>
+                                        <div style="min-width: 0;">
+                                            <div style="font-size: 11px; color: #747d8c; line-height: 1.2;">
+                                                Total Belanja Bulan Ini:
+                                            </div>
+                                            <div style="font-size: 14px; font-weight: 800; color: #2d3436; margin-top: 2px; white-space: nowrap;">
+                                                Rp. <?= number_format($total_bulan_ini->total_belanja ?? 0, 0, ',', '.') ?>
+                                                <span style="font-size: 10px; font-weight: 500; color: #888; margin-left: 2px;">
+                                                    (<?= $total_bulan_ini->jml_transaksi ?? 0 ?> transaksi)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="flex-shrink: 0;">
+                                        <a href="javascript:void(0)" class="external" onclick="window.location.href='<?= base_url('siswa/history/transaksi') ?>'; return false;" 
+                                           style="font-size: 11px; font-weight: 600; padding: 5px 12px; background: #EB6025; color: #fff; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; box-shadow: 0 2px 6px rgba(235,96,37,0.25);">
+                                            Rekap &rarr;
+                                        </a>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <!-- end profile balance -->
+                        <!-- end profile balance & monthly expense card -->
 
-                        <!-- card total belanja bulan ini -->
-                        <div class="container" style="margin-top: -10px; margin-bottom: 12px;">
-                            <div class="background-white border-radius padding-box-middle box-shadow" style="border-left: 4px solid #ff793f;">
-                                <div class="row row-no-margin-bottom">
-                                    <div class="col-65">
-                                        <span class="icon-small" style="color: #ff793f;"><i class="fa fa-shopping-cart"></i></span>
-                                        <span style="font-size: 11px; color: #777;">Total Belanja Bulan Ini:</span>
-                                        <h5 style="margin: 2px 0 0 0; color: #2d3436; font-weight: 700;">Rp. <?= number_format($total_bulan_ini->total_belanja ?? 0, 0, ',', '.') ?></h5>
-                                        <span style="font-size: 10px; color: #888;"><?= $total_bulan_ini->jml_transaksi ?? 0 ?> transaksi (<?= nama_bulan(date('m')) . ' ' . date('Y') ?>)</span>
-                                    </div>
-                                    <div class="col-35 text-right" style="display: flex; align-items: center; justify-content: flex-end;">
-                                        <a href="javascript:void(0)" class="external buttons" onclick="window.location.href='<?= base_url('siswa/history/transaksi') ?>'; return false;" style="font-size: 10px; padding: 5px 8px; background: #ff793f; color: #fff; border-radius: 4px; display: inline-block;">Rekap &rarr;</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end card total belanja bulan ini -->
-
-                        <!-- separator -->
-                        <div class="separator"></div>
+                        <!-- spacing before menus -->
+                        <div style="height: 18px;"></div>
                         <!-- end separator -->
                         <!-- menus -->
                         <div class="menus">

@@ -42,6 +42,8 @@ class Dashboard extends BaseController
             ->orderBy('periode', 'DESC')
             ->get()->getResult();
 
+        $siswa = !empty($ortu->id_siswa) ? $this->siswa->find($ortu->id_siswa) : null;
+
         $data = [
             'title'           => 'Dashboard Ortu',
             'session'         => session()->get(),
@@ -49,6 +51,7 @@ class Dashboard extends BaseController
             'setting'         => $this->setting->find(1),
             'deposit'         => $this->deposit->where($where)->first(),
             'user'            => $ortu,
+            'siswa'           => $siswa,
             'notifikasi'      => $this->notifikasi->where('id_ortu', $id_ortu)->orderBy('id', 'desc')->findAll(20),
             'total_bulan_ini' => $total_bulan_ini,
             'rekap_bulanan'   => $rekap_bulanan,
