@@ -1,0 +1,36 @@
+# cPanel Server Generated Folders
+.well-known/
+cgi-bin/
+ftpbtd/
+.user.ini
+php.ini
+*.log
+*.tmp
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# CodeIgniter 4 Writable Files
+~core/writable/cache/*
+!~core/writable/cache/index.html
+~core/writable/logs/*
+!~core/writable/logs/index.html
+~core/writable/session/*
+!~core/writable/session/index.html
+~core/writable/debugbar/*
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor & IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
