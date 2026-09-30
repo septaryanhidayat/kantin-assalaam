@@ -69,3 +69,40 @@ if (!function_exists('format_bulan_tahun')) {
     }
 }
 
+if (!function_exists('foto_barang')) {
+    function foto_barang($filename)
+    {
+        if (empty($filename)) {
+            return base_url('assets/food/food.png');
+        }
+
+        $baseDir = defined('FCPATH') ? FCPATH : (ROOTPATH . '../');
+        $foodDir = rtrim($baseDir, '\\/ ') . '/assets/food/';
+
+        // If filename already ends with .webp
+        if (substr(strtolower($filename), -5) === '.webp') {
+            return base_url('assets/food/' . $filename);
+        }
+
+        // Check if corresponding .webp exists
+        $nameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
+        $webpName = $nameWithoutExt . '.webp';
+        if (is_file($foodDir . $webpName)) {
+            return base_url('assets/food/' . $webpName);
+        }
+
+        // Check if original file exists
+        if (is_file($foodDir . $filename)) {
+            return base_url('assets/food/' . $filename);
+        }
+
+        // Fallback to food.webp or food.png
+        if (is_file($foodDir . 'food.webp')) {
+            return base_url('assets/food/food.webp');
+        }
+
+        return base_url('assets/food/food.png');
+    }
+}
+
+

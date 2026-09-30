@@ -44,7 +44,7 @@
                                 foreach ($det as $d) {
                                     echo '
                                     <tr>
-                                        <td width="50"><img src="' . base_url('assets/food/' . $d->foto) . '" height="20"></td>
+                                        <td width="50"><img src="' . foto_barang($d->foto) . '" width="24" height="24" style="aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;"></td>
                                         <td>' . $d->nama . '</td>
                                         <td  align="center">' . $d->jumlah . '</td>
                                         <td align="center">' . $d->harga . '</td>

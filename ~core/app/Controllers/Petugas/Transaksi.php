@@ -104,34 +104,47 @@ class Transaksi extends BaseController
         }
         $output = '';
         if ($b != null) {
-            foreach ($b as $b) {
-                if ($b->stok == 0) {
-                    $disabled = 'btn-warning disabled';
-                    $border   = 'border border-warning';
+            foreach ($b as $item) {
+                if ($item->stok == 0) {
+                    $disabled = 'btn-secondary disabled';
                     $teks     = 'Habis';
                 } else {
                     $disabled = 'btn-primary';
-                    $border   = 'border border-primary';
-                    $teks     = 'Tambah Item';
+                    $teks     = 'Pilih Item';
                 }
 
-
+                $imgUrl = foto_barang($item->foto);
+                $stokBadge = ($item->stok == 0)
+                    ? '<span class="badge bg-danger position-absolute top-0 end-0 m-2 font-size-11 shadow-sm">Habis</span>'
+                    : '<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 font-size-11 shadow-sm">Stok: ' . $item->stok . '</span>';
 
                 $output .= '
-                <div class="col-md-2">
-                    <div class="card">
-                        <img class="card-img-top img-fluid" src="' . base_url('assets/food/' . $b->foto) . '" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">' . $b->nama . '</h5>
-                            <p class="card-text">
-                            <button type="button" class="btn btn-danger">
-                                Rp. ' . number_format($b->harga, 0, ',', '.') . '<span class="badge badge-warning">Stok: ' . $b->stok . '
-                            </span></button>
-                            </p>
-                            <form method="post" action="' . base_url() . '/petugas/transaksi/add">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 mb-3 d-flex align-items-stretch">
+                    <div class="card h-100 shadow-sm border-0 w-100 rounded-3 overflow-hidden d-flex flex-column justify-content-between" style="background:#fff;">
+                        <div>
+                            <div style="position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #f8f9fa;">
+                                <img src="' . $imgUrl . '" alt="' . htmlspecialchars($item->nama) . '" 
+                                     style="width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;" loading="lazy">
+                                ' . $stokBadge . '
+                            </div>
+                            <div class="p-2 pb-1">
+                                <div class="text-muted font-size-10 mb-1 text-uppercase fw-semibold">' . htmlspecialchars($item->kode) . '</div>
+                                <h6 class="card-title font-size-12 fw-bold text-dark mb-1" title="' . htmlspecialchars($item->nama) . '" 
+                                    style="line-height: 1.35; height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    ' . htmlspecialchars($item->nama) . '
+                                </h6>
+                                <div class="fw-bold text-danger font-size-13 mb-1">
+                                    Rp. ' . number_format($item->harga, 0, ',', '.') . '
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2 pt-0">
+                            <form method="post" action="' . base_url('petugas/transaksi/add') . '">
                                 <input type="hidden" name="id_transaksi" value="' . session()->get('session_transaksi') . '">
-                                <input type="hidden" name="id_barang" value="' . $b->id . '">
-                                <input type="submit" class="btn btn-sm ' . $disabled . '" value="' . $teks . '">
+                                <input type="hidden" name="id_barang" value="' . $item->id . '">
+                                <button type="submit" class="btn btn-sm w-100 ' . $disabled . ' font-size-12 fw-semibold py-1">
+                                    <i class="mdi mdi-cart-plus me-1"></i> ' . $teks . '
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -140,7 +153,7 @@ class Transaksi extends BaseController
             }
             echo $output;
         } else {
-            echo 'Tidak ada data';
+            echo '<div class="col-12"><div class="alert alert-info text-center py-3">Tidak ada barang yang ditemukan.</div></div>';
         }
     }
 

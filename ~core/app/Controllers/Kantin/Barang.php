@@ -43,7 +43,7 @@ class Barang extends BaseController
 
         return DataTable::of($q)
             ->add('foto', function ($row) {
-                return '<img src="' . base_url('assets/food/' . $row->foto) . '" width="70">';
+                return '<img src="' . foto_barang($row->foto) . '" style="width: 52px; height: 52px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">';
             })
             ->add('modal', function ($row) {
                 return number_format($row->modal, '0', ',', '.');
@@ -134,12 +134,56 @@ class Barang extends BaseController
         if ($this->validate($rules)) {
             if ($this->request->getFile('foto')->getSize() > 0) {
                 $imgPath = $this->request->getFile('foto');
-                $foto = $imgPath->getRandomName();
-                // Image manipulation
-                $image = \Config\Services::image()
-                    ->withFile($imgPath)
-                    ->resize(512, 512, true, 'height')
-                    ->save(FCPATH . '/assets/food/' . $foto);
+                $rawName = $imgPath->getRandomName();
+                $webpName = pathinfo($rawName, PATHINFO_FILENAME) . '.webp';
+                $tempPath = $imgPath->getTempName();
+
+                $imgInfo = @getimagesize($tempPath);
+                $saved = false;
+
+                if ($imgInfo && function_exists('imagewebp')) {
+                    $mime = $imgInfo['mime'];
+                    $source = null;
+                    if ($mime == 'image/png') {
+                        $source = @imagecreatefrompng($tempPath);
+                    } elseif ($mime == 'image/webp') {
+                        $source = @imagecreatefromwebp($tempPath);
+                    } elseif ($mime == 'image/jpeg' || $mime == 'image/jpg') {
+                        $source = @imagecreatefromjpeg($tempPath);
+                    }
+
+                    if ($source) {
+                        $origW = imagesx($source);
+                        $origH = imagesy($source);
+                        $targetSize = 500;
+                        $square = imagecreatetruecolor($targetSize, $targetSize);
+                        $white = imagecolorallocate($square, 255, 255, 255);
+                        imagefill($square, 0, 0, $white);
+
+                        $ratio = min($targetSize / $origW, $targetSize / $origH);
+                        $newW = (int)round($origW * $ratio);
+                        $newH = (int)round($origH * $ratio);
+                        $dstX = (int)round(($targetSize - $newW) / 2);
+                        $dstY = (int)round(($targetSize - $newH) / 2);
+
+                        imagecopyresampled($square, $source, $dstX, $dstY, 0, 0, $newW, $newH, $origW, $origH);
+                        $destPath = FCPATH . 'assets/food/' . $webpName;
+                        if (@imagewebp($square, $destPath, 82)) {
+                            $foto = $webpName;
+                            $saved = true;
+                        }
+                        imagedestroy($source);
+                        imagedestroy($square);
+                    }
+                }
+
+                if (!$saved) {
+                    $foto = $rawName;
+                    \Config\Services::image()
+                        ->withFile($imgPath)
+                        ->fit(500, 500, 'center')
+                        ->save(FCPATH . 'assets/food/' . $foto);
+                }
             }
 
             if ($this->request->getVar('id') == null) {

@@ -30,6 +30,11 @@ Options All -Indexes
 	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 	RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
 
+	# Rewrite to webp if original food image is missing but webp exists
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{DOCUMENT_ROOT}/assets/food/$1.webp -f
+	RewriteRule ^assets/food/(.+)\.(jpe?g|png)$ assets/food/$1.webp [L,T=image/webp]
+
 	# Checks to see if the user is attempting to access a valid file,
 	# such as an image or css document, if this isn't true it sends the
 	# request to the front controller, index.php

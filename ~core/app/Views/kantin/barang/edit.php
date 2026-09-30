@@ -77,7 +77,7 @@
                         <div class="mb-3 row">
                             <label for="example-text-input" class="col-md-4 col-form-label">Foto</label>
                             <div class="col-md-8">
-                                <img id="output" width="100" class="img-thumbnail" src="<?= base_url('assets/food/' . $barang->foto) ?>" />
+                                <img id="output" width="100" class="img-thumbnail mb-2" src="<?= foto_barang($barang->foto) ?>" style="width: 100px; height: 100px; aspect-ratio: 1/1; object-fit: cover;" />
                                 <input type="file" name="foto" class="form-control" id="inputGroupFile02" onchange="loadFile(event)">
                             </div>
                         </div>

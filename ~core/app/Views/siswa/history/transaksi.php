@@ -178,7 +178,7 @@
                                     ?>
                                         <tr>
                                             <td width="30">
-                                                <img src="<?= base_url('assets/food/' . $d->foto) ?>" height="22" style="border-radius: 4px; object-fit: cover;">
+                                                <img src="<?= foto_barang($d->foto) ?>" width="24" height="24" style="border-radius: 4px; object-fit: cover; aspect-ratio: 1/1;">
                                             </td>
                                             <td><?= $d->nama ?></td>
                                             <td align="center" width="40"><?= $d->jumlah ?>x</td>
