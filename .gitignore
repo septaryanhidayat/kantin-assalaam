@@ -34,3 +34,8 @@ Desktop.ini
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Local Backups & SQL Dumps
+BACKUP/
+*.sql
+screencapture-*.png

@@ -42,7 +42,8 @@
                         <?php foreach ($columns as $c) : ?>
                             <?php 
                             $field = $c->Field;
-                            $val = $row[$field] ?? '';
+                            $rawVal = $row[$field] ?? null;
+                            $val = $rawVal ?? '';
                             $isPk = ($c->Key == 'PRI');
                             $isAutoInc = ($c->Extra == 'auto_increment');
                             $isNullable = ($c->Null == 'YES');
@@ -98,7 +99,7 @@
 
                                     <?php if ($isNullable && !$isAutoInc) : ?>
                                         <div class="form-check mt-1">
-                                            <input class="form-check-input" type="checkbox" name="is_null[<?= $field ?>]" value="1" id="null_<?= $field ?>" <?= ($action == 'edit' && $val === null) ? 'checked' : '' ?>>
+                                            <input class="form-check-input" type="checkbox" name="is_null[<?= $field ?>]" value="1" id="null_<?= $field ?>" <?= ($action == 'edit' && $rawVal === null) ? 'checked' : '' ?>>
                                             <label class="form-check-label font-size-12 text-muted" for="null_<?= $field ?>">
                                                 Set Nilai NULL
                                             </label>

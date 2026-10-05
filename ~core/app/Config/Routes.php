@@ -48,9 +48,18 @@ $routes->post('/kantin/barang/new', 'Kantin/Barang::save');
 $routes->post('/kantin/barang/edit/(:num)', 'Kantin/Barang::save');
 
 $routes->post('/admin/setting', 'Admin/Setting::save');
-$routes->post('/admin/database/query', 'Admin/Database::query');
-$routes->post('/admin/database/save_row/(:segment)', 'Admin/Database::save_row/$1');
-$routes->post('/admin/database/update_row/(:segment)', 'Admin/Database::update_row/$1');
+
+$routes->group('admin/database', function ($routes) {
+    $routes->get('', 'Admin\Database::index');
+    $routes->get('table/(:segment)', 'Admin\Database::table/$1');
+    $routes->get('create/(:segment)', 'Admin\Database::create/$1');
+    $routes->post('save_row/(:segment)', 'Admin\Database::save_row/$1');
+    $routes->get('edit/(:segment)', 'Admin\Database::edit/$1');
+    $routes->post('update_row/(:segment)', 'Admin\Database::update_row/$1');
+    $routes->get('delete_row/(:segment)', 'Admin\Database::delete_row/$1');
+    $routes->match(['get', 'post'], 'query', 'Admin\Database::query');
+    $routes->get('backup', 'Admin\Database::backup');
+});
 
 $routes->post('/admin/profile', 'Admin/Profile::save');
 $routes->post('/admin/profile/password', 'Admin/Profile::save_password');

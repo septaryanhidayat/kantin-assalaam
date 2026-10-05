@@ -240,6 +240,11 @@ class Database extends BaseController
         $pk = $this->request->getGet('pk');
         $val = $this->request->getGet('val');
 
+        if (empty($pk) || $val === null || $val === '') {
+            session()->setFlashData(['alert' => true, 'title' => 'ERROR', 'message' => 'Kunci primary key tidak valid.', 'type' => 'error']);
+            return redirect()->to(base_url('admin/database/table/' . $tableName));
+        }
+
         $db = \Config\Database::connect();
         $row = $db->table($tableName)->where($pk, $val)->get()->getRowArray();
 
@@ -279,7 +284,7 @@ class Database extends BaseController
         $pk = $this->request->getPost('pk_field');
         $pkVal = $this->request->getPost('pk_value');
 
-        if (empty($pk) || $pkVal === null) {
+        if (empty($pk) || $pkVal === null || $pkVal === '') {
             session()->setFlashData(['alert' => true, 'title' => 'ERROR', 'message' => 'Kunci primary key tidak valid.', 'type' => 'error']);
             return redirect()->to(base_url('admin/database/table/' . $tableName));
         }
@@ -328,7 +333,9 @@ class Database extends BaseController
         }
 
         try {
-            $db->table($tableName)->where($pk, $pkVal)->update($updateData);
+            if (!empty($updateData)) {
+                $db->table($tableName)->where($pk, $pkVal)->update($updateData);
+            }
             session()->setFlashData(['alert' => true, 'title' => 'SUKSES', 'message' => "Data pada tabel '$tableName' berhasil diperbarui.", 'type' => 'success']);
         } catch (\Throwable $e) {
             session()->setFlashData(['alert' => true, 'title' => 'ERROR', 'message' => $e->getMessage(), 'type' => 'error']);
@@ -352,7 +359,7 @@ class Database extends BaseController
         $pk = $this->request->getGet('pk');
         $val = $this->request->getGet('val');
 
-        if (!empty($pk) && !empty($val)) {
+        if (!empty($pk) && $val !== null && $val !== '') {
             $db = \Config\Database::connect();
             try {
                 $db->table($tableName)->where($pk, $val)->delete();
